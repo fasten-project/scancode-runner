@@ -13,15 +13,15 @@
 # limitations under the License.
 #
 
-
 import pytest
-from pathlib import Path
-from licensing_analyzer.utils import Utils
+from runner.scancode import ScanCodeRunner
+from runner.tests.sources import sources
 
 
-@pytest.mark.parametrize('old, prefix, new', [
-    ('/abs_path/rel_dir/d1.c', '/abs_path', 'rel_dir/d1.c')
-])
-def test_relativize_filename(old, prefix, new):
-    new_file_name = Utils.relativize_filename(old, prefix)
-    assert Path(new_file_name) == Path(new)
+@pytest.fixture(scope='session')
+def runner(sources):
+    yield ScanCodeRunner(str(sources))
+
+
+def test_pass(runner, sources):
+    pass

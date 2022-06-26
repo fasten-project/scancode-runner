@@ -16,33 +16,33 @@
 import logging
 import argparse
 import pprint
-from licensing_analyzer.plugin import Plugin
-from licensing_analyzer.config import Config
+from runner.plugin import Plugin
+from runner.config import Config
 
 logger = logging.getLogger(__name__)
 
-plugin_name = 'Licensing Analyzer'
-plugin_description = 'A FASTEN plug-in to populate licensing risk related metadata for a product.'
+plugin_name = 'ScanCode Runner'
+plugin_description = 'A FASTEN plug-in that runs ScanCode Toolkit on a code base.'
 plugin_version = '0.0.1'
 
 
 def get_args_parser():
-    args_parser = argparse.ArgumentParser("Licensing Analyzer")
+    args_parser = argparse.ArgumentParser("ScanCode Runner")
 
     args_parser.add_argument('--consume_topic', type=str,
                              default='fasten.SourcesProvider.out',
                              help="Kafka topic to consume from.")
 
     args_parser.add_argument('--produce_topic', type=str,
-                             default='fasten.LicensingAnalyzer.out',
-                             help="Kafka topic to produce revision-level message to.")
+                             default='fasten.ScanCodeRunner.out',
+                             help="Kafka topic to produce product-level messages to.")
 
     args_parser.add_argument('--err_topic', type=str,
-                             default='fasten.LicensingAnalyzer.err',
+                             default='fasten.ScanCodeRunner.err',
                              help="Kafka topic to write errors to.")
 
     args_parser.add_argument('--log_topic', type=str,
-                             default='fasten.LicensingAnalyzer.log',
+                             default='fasten.ScanCodeRunner.log',
                              help="Kafka topic to write logs to.")
 
     args_parser.add_argument('--bootstrap_servers', type=str,
@@ -50,7 +50,7 @@ def get_args_parser():
                              help="Kafka servers, comma separated list between quotes.")
 
     args_parser.add_argument('--group_id', type=str,
-                             default='LicensingAnalyzer',
+                             default='ScanCodeRunner',
                              help="Kafka consumer group ID to which the consumer belongs.")
 
     args_parser.add_argument('--consumer_timeout_ms', type=int,

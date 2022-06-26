@@ -26,7 +26,7 @@ RUN apt-get update \
 
 WORKDIR /plugin
 
-COPY licensing_analyzer licensing_analyzer/
+COPY runner runner/
 COPY integration_tests/*.py integration_tests/
 COPY entrypoint.py .
 COPY setup.py .

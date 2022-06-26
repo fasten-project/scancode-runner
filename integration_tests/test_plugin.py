@@ -31,7 +31,7 @@ def mock_in():
 def mock_out():
     mock = MockConsumer('MockConsumerOut',
                         'kafka:9092',
-                        'fasten.LicensingAnalyzer.out')
+                        'fasten.ScanCodeRunner.out')
     mock.skip_messages()
     yield mock
     mock.free_resource()
@@ -41,7 +41,7 @@ def mock_out():
 def mock_log():
     mock = MockConsumer('MockConsumerLog',
                         'kafka:9092',
-                        'fasten.LicensingAnalyzer.log')
+                        'fasten.ScanCodeRunner.log')
     mock.skip_messages()
     yield mock
     mock.free_resource()
@@ -51,7 +51,7 @@ def mock_log():
 def mock_err():
     mock = MockConsumer('MockConsumerErr',
                         'kafka:9092',
-                        'fasten.LicensingAnalyzer.err')
+                        'fasten.ScanCodeRunner.err')
     mock.skip_messages()
     yield mock
     mock.free_resource()
@@ -74,43 +74,22 @@ def plugin_run(mock_in, mock_out, mock_log, mock_err,
         "forge": "mvn",
         "product": "m1",
         "version": "1.0.0",
-        "sourcePath": "/plugin/rapidplugin/tests/resources/maven/m1"
+        "sourcePath": "/plugin/runner/tests/resources/maven/m1"
     },
     {
         "forge": "debian",
         "product": "d1",
         "version": "1.0.0",
-        "sourcePath": "/plugin/rapidplugin/tests/resources/debian/d1"
+        "sourcePath": "/plugin/runner/tests/resources/debian/d1"
     },
     {
         "forge": "PyPI",
         "product": "p1",
         "version": "1.0.0",
-        "sourcePath": "/plugin/rapidplugin/tests/resources/pypi/p1"
+        "sourcePath": "/plugin/runner/tests/resources/pypi/p1"
     }])
 def test_successes(plugin_run, in_message):
     out, log, err = plugin_run
     assert len(out) >= 1
     assert len(log) >= 1
     assert len(err) == 0
-
-
-@pytest.mark.parametrize('in_message', [
-    # missing 'forge'
-    {
-        "product": "m1",
-        "version": "1.0.0",
-        "sourcePath": "/plugin/rapidplugin/tests/resources/maven/m1"
-    },
-    # missing 'sourcePath'
-    {
-        "forge": "PyPI",
-        "product": "p1",
-        "version": "1.0.0"
-    }
-])
-def test_failures(plugin_run, in_message):
-    out, log, err = plugin_run
-    assert len(out) == 0
-    assert len(log) >= 1
-    assert len(err) >= 1

@@ -4,7 +4,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-# http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,20 +13,20 @@
 # limitations under the License.
 #
 
-import logging
-import datetime
-
-from licensing_analyzer.utils import Utils
-
-logger = logging.getLogger(__name__)
+import os
+import shutil
+import pytest
 
 
-class ScancodeRunner:
+@pytest.fixture(scope='session')
+def sources(tmp_path_factory):
+    tmp = tmp_path_factory.mktemp("sources")
+    shutil.copytree('runner/tests/resources', tmp, dirs_exist_ok=True)
+    yield tmp
 
-    def __init__(self, base_dir):
-        self.analyzer_name = "Scancode Toolkit"
-        self.base_dir = base_dir
 
-    def analyze(self, payload):
-        out_payload = {}
-        return out_payload
+def fix_sourcePath(record, tmp_sources_path):
+    if "sourcePath" in record:
+        sourcePath = record["sourcePath"]
+        record.update({"sourcePath": os.path.join(tmp_sources_path, sourcePath)})
+    return record
