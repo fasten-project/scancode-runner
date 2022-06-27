@@ -40,6 +40,10 @@ def get_args_parser():
                              default='.',
                              help="Directory to output the results of code analysis.")
 
+    args_parser.add_argument('--extensions', type=str, 
+                             nargs='*',
+                             help="List of file name extensions that should be analysed. If unspecified, all files will be scanned.")
+
     args_parser.add_argument('--consume_topic', type=str,
                              default='fasten.SourcesProvider.out',
                              help="Kafka topic to consume from.")
@@ -83,6 +87,7 @@ def get_config(args):
     c = Config('Default')
     c.add_config_value('input_dir', args.input_dir)
     c.add_config_value('output_dir', args.output_dir)
+    c.add_config_value('extensions', args.extensions)
     c.add_config_value('bootstrap_servers', args.bootstrap_servers)
     c.add_config_value('consume_topic', args.consume_topic)
     c.add_config_value('produce_topic', args.produce_topic)
@@ -121,7 +126,7 @@ def run_kafka_plugin(config):
 
 def run_cli(config):
     logger.info('Running without Kafka connection on input directory: ' + config.get_config_value('input_dir'))
-    runner = ScanCodeRunner()
+    runner = ScanCodeRunner(config.get_config_value('extensions'))
     result_dir = runner.analyze(config.get_config_value('input_dir'), config.get_config_value("output_dir"))
 
 

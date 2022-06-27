@@ -115,7 +115,7 @@ class Plugin(KafkaPluginNonBlocking):
           in_payload (JSON): validated source code location
         '''
         try:
-            analyzer = ScanCodeRunner()
+            analyzer = ScanCodeRunner(self.plugin_config.get_config_value('extensions'))
             result_file = analyzer.analyze(in_payload['sourcePath'],
                                            self.create_output_path(in_payload))
             out_message = self.create_message(in_payload, {"result_file": result_file})

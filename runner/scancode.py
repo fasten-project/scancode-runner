@@ -22,10 +22,15 @@ from pathlib import PurePath
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
+
 class ScanCodeRunner:
 
-    def __init__(self):
+    def __init__(self, extensions):
         self.analyzer_name = "ScanCode Toolkit"
+        if extensions is not None:
+            self.extensions = tuple(extensions)
+        else:
+            self.extensions = tuple()
 
     def analyze(self, input_dir, output_dir):
         results = {}
@@ -33,7 +38,7 @@ class ScanCodeRunner:
         return self.output_results(results, output_dir)
 
     def output_results(self, results, output_dir):
-        os.makedirs(output_dir, exist_ok = True)
+        os.makedirs(output_dir, exist_ok=True)
         output_file = os.path.join(output_dir, 'scancode_results.json')
         with open(output_file, 'w', encoding="utf-8") as file:
             json.dump(results, file)
@@ -45,11 +50,12 @@ class ScanCodeRunner:
         file_licenses = {}
         for root, dirs, files in os.walk(input_dir):
             for name in files:
-                abs_file = os.path.join(root, name)
-                rel_file = self.make_file_relative_to(abs_file, input_dir)
-                logger.info("Scanning " + rel_file)
-                scan_result = scancode.api.get_licenses(abs_file)
-                file_licenses.update({rel_file: self.select_file_licenses_output(scan_result)})
+                if self.extensions == tuple() or name.endswith(self.extensions):
+                    abs_file = os.path.join(root, name)
+                    rel_file = self.make_file_relative_to(abs_file, input_dir)
+                    logger.info("Scanning " + rel_file)
+                    scan_result = scancode.api.get_licenses(abs_file)
+                    file_licenses.update({rel_file: self.select_file_licenses_output(scan_result)})
         return file_licenses
 
     def make_file_relative_to(self, filename, to):

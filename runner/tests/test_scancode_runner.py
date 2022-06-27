@@ -20,7 +20,7 @@ from runner.scancode import ScanCodeRunner
 
 @pytest.fixture(scope='session')
 def runner(output_dir, temp_dir):
-    yield ScanCodeRunner()
+    yield ScanCodeRunner(None)
 
 
 def test_pass(runner, input_dir, output_dir, temp_dir):
