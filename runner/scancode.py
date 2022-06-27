@@ -17,7 +17,9 @@ import os
 import logging
 import json
 import scancode.api
+import scancode_config
 from pathlib import PurePath
+from datetime import datetime, timezone
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -27,13 +29,19 @@ class ScanCodeRunner:
 
     def __init__(self, extensions):
         self.analyzer_name = "ScanCode Toolkit"
+        self.analyzer_version = scancode_config.__version__
         if extensions is not None:
             self.extensions = tuple(extensions)
         else:
             self.extensions = tuple()
 
     def analyze(self, input_dir, output_dir):
-        results = {}
+        results = {'analyzer_name': self.analyzer_name,
+                   'analyzer_version': self.analyzer_version,
+                   'analysis_timestamp': datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S%Z"),
+                   'analysis_working_dir': os.getcwd(),
+                   'analysis_input_dir': input_dir,
+                   'analysis_output_dir': output_dir}
         results.update({'file_licenses': self.scan_file_licenses(input_dir)})
         return self.output_results(results, output_dir)
 
