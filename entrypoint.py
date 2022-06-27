@@ -22,6 +22,7 @@ from runner.scancode import ScanCodeRunner
 
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 
 tool_name = 'ScanCode Runner'
 tool_description = 'A FASTEN plug-in that runs ScanCode Toolkit on a code base.'
@@ -71,12 +72,8 @@ def get_args_parser():
                              default=1,
                              help="Delay in seconds between each message consumption call.")
 
-    args_parser.add_argument('--temp_dir', type=str,
-                             default='/tmp',
-                             help="Temporary directory.")
-
     args_parser.add_argument('--max_log_message_width', type=int,
-                             default=320,
+                             default=1024,
                              help="Maximum number of characters before a log message will be truncated.")
 
     return args_parser
@@ -94,7 +91,6 @@ def get_config(args):
     c.add_config_value('group_id', args.group_id)
     c.add_config_value('consumption_delay_sec', args.consumption_delay_sec)
     c.add_config_value('consumer_timeout_ms', args.consumer_timeout_ms)
-    c.add_config_value('temp_dir', args.temp_dir)
     c.add_config_value('max_log_message_width', args.max_log_message_width)
     return c
 
@@ -103,9 +99,9 @@ def main():
     parser = get_args_parser()
     config = get_config(parser.parse_args())
 
-    print(tool_name + ' ' + tool_version)
-    print('Running with configuration ' +
-          '\"' + config.get_config_name() + '\"')
+    logger.info(tool_name + ' ' + tool_version)
+    logger.info('Running with configuration ' +
+                '\"' + config.get_config_name() + '\"')
 
     pp = pprint.PrettyPrinter(indent=2)
     pp.pprint(config.get_all_values())
@@ -117,18 +113,16 @@ def main():
 
 
 def run_kafka_plugin(config):
-    print('Creating Kafka plugin... ')
+    logger.info('Creating Kafka plugin... ')
     plugin = Plugin(tool_name, tool_version,
                     tool_description, config)
     plugin.run_forever()
 
 
 def run_cli(config):
-    print('Running without Kafka connection on input directory: ' + config.get_config_value('input_dir'))
-    runner = ScanCodeRunner(config.get_config_value("output_dir"),
-                            config.get_config_value("temp_dir"))
-    result_dir = runner.analyze(config.get_config_value('input_dir'))
-    print('Analysis result was output to: ' + result_dir)
+    logger.info('Running without Kafka connection on input directory: ' + config.get_config_value('input_dir'))
+    runner = ScanCodeRunner()
+    result_dir = runner.analyze(config.get_config_value('input_dir'), config.get_config_value("output_dir"))
 
 
 if __name__ == "__main__":

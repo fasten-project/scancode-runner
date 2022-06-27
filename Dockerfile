@@ -22,7 +22,8 @@ USER root
 
 RUN apt-get update \
  && apt-get install -y -qq \
-        libsnappy-dev
+    libsnappy-dev \
+    gcc
 
 WORKDIR /plugin
 

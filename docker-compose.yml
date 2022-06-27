@@ -37,7 +37,7 @@ services:
     depends_on:
       - kafka
     image: scancode-runner-test
-    entrypoint: ['python', '/plugin/entrypoint.py', '--group_id=Scancode-Runner-TEST', '--bootstrap_servers=kafka:9092', '--output_dir=/tmp/scancode-runner-test-output-dir', '--temp_dir=/tmp/scancode-runner-test-temp-dir']
+    entrypoint: ['python', '/plugin/entrypoint.py', '--group_id=Scancode-Runner-TEST', '--bootstrap_servers=kafka:9092', '--output_dir=/tmp/scancode-runner-test-output-dir']
 
   scancode-runner-unit-tests:
     image: scancode-runner-test

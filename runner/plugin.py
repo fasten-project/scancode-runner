@@ -13,6 +13,7 @@
 # limitations under the License.
 #
 
+import os
 import datetime
 import textwrap
 from time import sleep
@@ -38,7 +39,6 @@ class Plugin(KafkaPluginNonBlocking):
         self.log_topic = self.plugin_config.get_config_value('log_topic')
         self.error_topic = self.plugin_config.get_config_value('err_topic')
         self.group_id = self.plugin_config.get_config_value('group_id')
-        self.temp_dir = self.plugin_config.get_config_value('temp_dir')
         self.output_dir = self.plugin_config.get_config_value('output_dir')
         self.consumer_timeout_ms = self.plugin_config.get_config_value('consumer_timeout_ms')
         self.consumption_delay_sec = self.plugin_config.get_config_value('consumption_delay_sec')
@@ -115,13 +115,19 @@ class Plugin(KafkaPluginNonBlocking):
           in_payload (JSON): validated source code location
         '''
         try:
-            analyzer = ScanCodeRunner(self.output_dir, self.temp_dir)
-            result_file = analyzer.analyze(in_payload['sourcePath'])
-            out_message = self.create_message(in_payload, {"result": result_file})
+            analyzer = ScanCodeRunner()
+            result_file = analyzer.analyze(in_payload['sourcePath'],
+                                           self.create_output_path(in_payload))
+            out_message = self.create_message(in_payload, {"result_file": result_file})
             self.emit_message(self.produce_topic, out_message, "[SUCCESS]", out_message)
             self.handle_success(in_payload, "ScanCode results produced.")
         except Exception as e:
             self.handle_failure(in_payload, "ScanCode failed for payload.", str(e))
+
+    def create_output_path(self, in_payload):
+        product = in_payload['product']
+        version = in_payload['version']
+        return os.path.join(self.output_dir, product[0:1], product, version)
 
     def handle_failure(self, in_payload, failure, error):
         '''

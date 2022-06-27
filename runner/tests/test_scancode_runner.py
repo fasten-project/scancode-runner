@@ -13,14 +13,22 @@
 # limitations under the License.
 #
 
+import os
 import pytest
 from runner.scancode import ScanCodeRunner
 
 
 @pytest.fixture(scope='session')
 def runner(output_dir, temp_dir):
-    yield ScanCodeRunner(str(output_dir), str(temp_dir))
+    yield ScanCodeRunner()
 
 
 def test_pass(runner, input_dir, output_dir, temp_dir):
+    pass
+
+
+def test_smoke(runner, input_dir, output_dir, temp_dir):
+    result = runner.analyze(os.path.join(input_dir, 'maven', 'm1'),
+                            os.path.join(output_dir, 'maven', 'm1'))
+    print(result)
     pass

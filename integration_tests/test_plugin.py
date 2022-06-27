@@ -62,7 +62,7 @@ def plugin_run(mock_in, mock_out, mock_log, mock_err,
                in_message):
     mock_in.emit_message(mock_in.produce_topic, in_message,
                          "[TEST]", in_message)
-    sleep(2)
+    sleep(5)
     mock_out.consume_messages()
     mock_log.consume_messages()
     mock_err.consume_messages()

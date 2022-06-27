@@ -40,6 +40,7 @@ setup(
         'fasten',
         'kafka-python==2.0.2',
         'python-snappy',
-        'crc32c'
+        'crc32c',
+        'scancode-toolkit'
     ]
 )

@@ -21,7 +21,8 @@ import pytest
 @pytest.fixture(scope='session')
 def input_dir(tmp_path_factory):
     tmp = tmp_path_factory.mktemp("input_dir")
-    shutil.copytree('runner/tests/resources', tmp, dirs_exist_ok=True)
+    shutil.copytree(os.path.join('runner', 'tests', 'resources'), tmp,
+                    dirs_exist_ok=True)
     yield tmp
 
 
