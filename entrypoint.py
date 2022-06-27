@@ -108,9 +108,6 @@ def main():
     logger.info('Running with configuration ' +
                 '\"' + config.get_config_name() + '\"')
 
-    pp = pprint.PrettyPrinter(indent=2)
-    pp.pprint(config.get_all_values())
-
     if(config.get_config_value('input_dir') != None):
         run_cli(config)
     else:
