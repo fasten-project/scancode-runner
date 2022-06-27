@@ -125,9 +125,10 @@ class Plugin(KafkaPluginNonBlocking):
             self.handle_failure(in_payload, "ScanCode failed for payload.", str(e))
 
     def create_output_path(self, in_payload):
+        forge = in_payload['forge']
         product = in_payload['product']
         version = in_payload['version']
-        return os.path.join(self.output_dir, product[0:1], product, version)
+        return os.path.join(self.output_dir, forge, product[0:1], product, version)
 
     def handle_failure(self, in_payload, failure, error):
         '''
