@@ -15,13 +15,12 @@
 
 import pytest
 from runner.scancode import ScanCodeRunner
-from runner.tests.sources import sources
 
 
 @pytest.fixture(scope='session')
-def runner(sources):
-    yield ScanCodeRunner(str(sources))
+def runner(output_dir, temp_dir):
+    yield ScanCodeRunner(str(output_dir), str(temp_dir))
 
 
-def test_pass(runner, sources):
+def test_pass(runner, input_dir, output_dir, temp_dir):
     pass

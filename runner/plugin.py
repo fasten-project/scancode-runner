@@ -38,7 +38,8 @@ class Plugin(KafkaPluginNonBlocking):
         self.log_topic = self.plugin_config.get_config_value('log_topic')
         self.error_topic = self.plugin_config.get_config_value('err_topic')
         self.group_id = self.plugin_config.get_config_value('group_id')
-        self.sources_dir = self.plugin_config.get_config_value('sources_dir')
+        self.temp_dir = self.plugin_config.get_config_value('temp_dir')
+        self.output_dir = self.plugin_config.get_config_value('output_dir')
         self.consumer_timeout_ms = self.plugin_config.get_config_value('consumer_timeout_ms')
         self.consumption_delay_sec = self.plugin_config.get_config_value('consumption_delay_sec')
         self.max_log_message_width = self.plugin_config.get_config_value('max_log_message_width')
@@ -114,9 +115,9 @@ class Plugin(KafkaPluginNonBlocking):
           in_payload (JSON): validated source code location
         '''
         try:
-            analyzer = ScanCodeRunner(self.sources_dir)
-            out_payload = analyzer.analyze(in_payload)
-            out_message = self.create_message(in_payload, {"payload": out_payload})
+            analyzer = ScanCodeRunner(self.output_dir, self.temp_dir)
+            result_file = analyzer.analyze(in_payload['sourcePath'])
+            out_message = self.create_message(in_payload, {"result": result_file})
             self.emit_message(self.produce_topic, out_message, "[SUCCESS]", out_message)
             self.handle_success(in_payload, "ScanCode results produced.")
         except Exception as e:

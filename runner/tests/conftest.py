@@ -19,14 +19,27 @@ import pytest
 
 
 @pytest.fixture(scope='session')
-def sources(tmp_path_factory):
-    tmp = tmp_path_factory.mktemp("sources")
+def input_dir(tmp_path_factory):
+    tmp = tmp_path_factory.mktemp("input_dir")
     shutil.copytree('runner/tests/resources', tmp, dirs_exist_ok=True)
+    yield tmp
+
+
+@pytest.fixture(scope='session')
+def output_dir(tmp_path_factory):
+    tmp = tmp_path_factory.mktemp("output_dir")
+    yield tmp
+
+
+@pytest.fixture(scope='session')
+def temp_dir(tmp_path_factory):
+    tmp = tmp_path_factory.mktemp("temp_dir")
     yield tmp
 
 
 def fix_sourcePath(record, tmp_sources_path):
     if "sourcePath" in record:
         sourcePath = record["sourcePath"]
-        record.update({"sourcePath": os.path.join(tmp_sources_path, sourcePath)})
+        record.update(
+            {"sourcePath": os.path.join(tmp_sources_path, sourcePath)})
     return record

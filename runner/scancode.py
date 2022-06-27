@@ -20,12 +20,10 @@ logger = logging.getLogger(__name__)
 
 class ScanCodeRunner:
 
-    def __init__(self, base_dir):
+    def __init__(self, output_dir, temp_dir):
         self.analyzer_name = "ScanCode Toolkit"
-        self.base_dir = base_dir
+        self.output_dir = output_dir
+        self.temp_dir = temp_dir
 
-    def analyze(self, payload):
-        out_payload = {
-            "not-yet-implemented": "please be patient"
-        }
-        return out_payload
+    def analyze(self, input_dir):
+        return "not-yet-implemented, please be patient"
