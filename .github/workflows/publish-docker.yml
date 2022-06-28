@@ -8,7 +8,7 @@ on:
       - v*
 
 env:
-  IMAGE_NAME: fasten.scancode_runner
+  IMAGE_NAME: fasten.scancode-runner
 
 jobs:
   push:
