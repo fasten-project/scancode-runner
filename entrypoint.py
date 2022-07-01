@@ -24,13 +24,13 @@ from runner.scancode import ScanCodeRunner
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
-tool_name = 'ScanCode Runner'
+tool_name = 'ScanCodeRunner'
 tool_description = 'A FASTEN plug-in that runs ScanCode Toolkit on a code base.'
 tool_version = '0.0.1'
 
 
 def get_args_parser():
-    args_parser = argparse.ArgumentParser("ScanCode Runner")
+    args_parser = argparse.ArgumentParser("ScanCodeRunner")
 
     args_parser.add_argument('--input_dir', type=str,
                              default=None,

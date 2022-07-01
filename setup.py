@@ -22,7 +22,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='ScanCode Runner',
+    name='ScanCodeRunner',
     version='0.0.1',
     description='Runs ScanCode Toolkit on a code base.',
     long_description=long_description,
