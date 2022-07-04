@@ -58,12 +58,13 @@ class ScanCodeRunner:
         file_licenses = {}
         for root, dirs, files in os.walk(input_dir):
             for name in files:
-                if self.extensions == tuple() or name.endswith(self.extensions):
-                    abs_file = os.path.join(root, name)
-                    rel_file = self.make_file_relative_to(abs_file, input_dir)
+                abs_file = os.path.join(root, name)
+                rel_file = self.make_file_relative_to(abs_file, input_dir)
+                if not self.skip_file(abs_file):
                     logger.info("Scanning " + rel_file)
                     scan_result = scancode.api.get_licenses(abs_file)
-                    file_licenses.update({rel_file: self.select_file_licenses_output(scan_result)})
+                    file_licenses.update({rel_file:
+                                          self.select_file_licenses_output(scan_result)})
         return file_licenses
 
     def make_file_relative_to(self, filename, to):
@@ -80,3 +81,13 @@ class ScanCodeRunner:
                 if key in ['name', 'spdx_license_key']
             })
         return result
+
+    def skip_file(self, file):
+        if self.extensions is not tuple():
+            if not file.endswith(self.extensions):
+                return True
+        else:
+            prog_lang = scancode.api.get_file_info(file)['programming_language']
+            if prog_lang is None or prog_lang == '':
+                return True
+        return False
