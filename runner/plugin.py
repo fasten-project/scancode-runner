@@ -126,9 +126,13 @@ class Plugin(KafkaPluginNonBlocking):
 
     def create_output_path(self, in_payload):
         forge = in_payload['forge']
-        product = in_payload['product']
-        version = in_payload['version']
+        product = self.sanitize_path_name(in_payload['product'])
+        version = self.sanitize_path_name(in_payload['version'])
         return os.path.join(self.output_dir, forge, product[0:1], product, version)
+
+    def sanitize_path_name(self, path_name):
+        result = path_name.replace(":", "_")
+        return result
 
     def handle_failure(self, in_payload, failure, error):
         '''
