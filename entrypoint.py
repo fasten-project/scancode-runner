@@ -15,7 +15,6 @@
 
 import logging
 import argparse
-import pprint
 from runner.plugin import Plugin
 from runner.config import Config
 from runner.scancode import ScanCodeRunner
@@ -40,9 +39,9 @@ def get_args_parser():
                              default='.',
                              help="Directory to output the results of code analysis.")
 
-    args_parser.add_argument('--extensions', type=str, 
-                             nargs='*',
-                             help="List of file name extensions that should be analysed. If unspecified, all files will be scanned.")
+    args_parser.add_argument('--extensions', type=str,
+                             nargs='+',
+                             help="List of file name extensions that should be analysed. If unspecified, all source code files will be scanned.")
 
     args_parser.add_argument('--consume_topic', type=str,
                              default='fasten.SourcesProvider.out',
